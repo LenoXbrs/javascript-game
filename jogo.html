@@ -1,0 +1,1027 @@
+<canvas id="tela" width="600" height="600"></canvas>
+<html><head>	
+    
+    <audio src="musica1.mp3" id="sound"></audio>
+    <audio src="comeu.wav" id="sound2"></audio>
+    <audio src="batida.wav" id="sound3"></audio>
+    <script>	
+
+var a = parseInt(prompt("Qual nivel 1, 2 ou 3 ?"))
+if(a == 1) {
+    var tela;
+var c;
+var sound = document.getElementById("sound")
+var sound2 = document.getElementById("sound2")
+var sound3 = document.getElementById("sound3")
+var cabeca;
+var maca;
+var bola;
+
+var pontos;
+var maca_x;
+var maca_y;
+
+var paraEsquerda = false;
+var paraDireita = true;
+var paraCima = false;
+var paraBaixo = false;
+var noJogo = true;    
+
+const TAMANHO_PONTO = 10;
+const ALEATORIO_MAXIMO = 58;
+const ATRASO = 120;
+const C_ALTURA = 600;
+const C_LARGURA = 600;    
+
+const TECLA_ESQUERDA = 37;
+const TECLA_DIREITA = 39;
+const TECLA_ACIMA = 38;
+const TECLA_ABAIXO = 40;
+
+var x = [];
+var y = [];
+
+iniciar();
+
+
+
+
+function iniciar() {
+    tela = document.getElementById("tela");
+    c = tela.getContext("2d");
+
+	c.fillStyle = "black";
+	c.fillRect(0, 0, C_LARGURA, C_ALTURA);
+    sound.play()
+    carregarImagens();
+    criarCobra();
+    localizarMaca();
+    setTimeout("cicloDeJogo()", ATRASO);
+}    
+
+function carregarImagens() {
+    cabeca = new Image();
+    cabeca.src = "cabeca.png";    
+    
+    bola = new Image();
+    bola.src = "ponto.png"; 
+    
+    maca = new Image();
+    maca.src = "maca.png"; 
+}
+
+function criarCobra() {
+    pontos = 15;
+	
+    for (var z = 0; z < pontos; z++) {
+        x[z] = 50 - z * 10;
+        y[z] = 50;
+    }
+}
+
+function localizarMaca() {
+    var r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    maca_x = r * TAMANHO_PONTO;
+
+    r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    maca_y = r * TAMANHO_PONTO;
+}    
+
+function cicloDeJogo() {
+    if (noJogo) {
+        verificarMaca();
+        verificarColisao();
+        mover();
+        sound.play()
+        fazerDesenho();
+        setTimeout("cicloDeJogo()", ATRASO);
+    }
+}
+
+function verificarMaca() {
+    if ((x[0] == maca_x) && (y[0] == maca_y)) {
+        pontos++;
+        localizarMaca();
+        sound2.pause()
+        sound2.play()
+    }
+}    
+
+function verificarColisao() {
+    for (var z = pontos; z > 0; z--) {
+        if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+            noJogo = false;
+        }
+    }
+
+    if (y[0] >= C_ALTURA) {
+        noJogo = false;
+    }
+
+    if (y[0] < 0) {
+       noJogo = false;
+    }
+
+    if (x[0] >= C_LARGURA) {
+      noJogo = false;
+    }
+
+    if (x[0] < 0) {
+      noJogo = false;
+    }
+}
+
+function mover() {
+    for (var z = pontos; z > 0; z--) {
+        x[z] = x[z-1];
+        y[z] = y[z-1];
+    }
+
+    if (paraEsquerda) {
+        x[0] -= TAMANHO_PONTO;
+    }
+
+    if (paraDireita) {
+        x[0] += TAMANHO_PONTO;
+    }
+
+    if (paraCima) {
+        y[0] -= TAMANHO_PONTO;
+    }
+
+    if (paraBaixo) {
+        y[0] += TAMANHO_PONTO;
+    }
+}    
+
+function fazerDesenho() {
+    c.clearRect(0, 0, C_LARGURA, C_ALTURA);
+	c.fillRect(0, 0, C_LARGURA, C_ALTURA);
+	
+    if (noJogo) {
+        c.drawImage(maca, maca_x, maca_y);
+		
+        for (var z = 0; z < pontos; z++) {
+            if (z == 0) {
+                c.drawImage(cabeca, x[z], y[z]);
+            } else {
+                c.drawImage(bola, x[z], y[z]);
+            }
+        }    
+    } else {
+        fimDeJogo();
+    }        
+}
+
+
+function fimDeJogo() {
+    c.fillStyle = "red";
+    c.textBaseline = "middle"; 
+    c.textAlign = "center"; 
+    c.font = "normal bold 22px helvetica";
+    c.fillText("DEAD END", C_LARGURA/2, C_ALTURA/2);
+}
+
+onkeydown = function(e) {
+    var tecla = e.keyCode;
+
+    if ((tecla == TECLA_ESQUERDA) && (!paraDireita)) {
+        paraEsquerda = true;
+        paraCima = false;
+        paraBaixo = false;
+    }
+
+    if ((tecla == TECLA_DIREITA) && (!paraEsquerda)) {
+        paraDireita = true;
+        paraCima = false;
+        paraBaixo = false;
+    }
+
+    if ((tecla == TECLA_ACIMA) && (!paraBaixo)) {
+        paraCima = true;
+        paraDireita = false;
+        paraEsquerda = false;
+    }
+
+    if ((tecla == TECLA_ABAIXO) && (!paraCima)) {
+        paraBaixo = true;
+        paraDireita = false;
+        paraEsquerda = false;
+    }        
+};  
+	
+ 
+
+
+}
+if (a == 2) {
+    var min; 		
+var seg;
+min = 1, seg = 0;	
+var sound = document.getElementById("sound")
+var sound2 = document.getElementById("sound2")
+var sound3 = document.getElementById("sound3")
+
+var tela;
+var c;
+
+var cabeca;
+var maca;
+var bola;
+var obstaculo;
+
+var pontos;
+var comidaMaca = 0;
+var comidapaGanhar = 0;
+var maca_x = [];
+var maca_y = [];
+var obstaculo_x = [];
+var obstaculo_y = [];
+
+var noJogo = true;    
+
+const TAMANHO_PONTO = 10;
+const ALEATORIO_MAXIMO = 60;
+const ATRASO = 47;
+const C_ALTURA = 600;
+const C_LARGURA = 600;    
+
+const TECLA_ESQUERDA = 37;
+const TECLA_DIREITA = 39;
+const TECLA_ACIMA = 38;
+const TECLA_ABAIXO = 40;
+
+var x = [];
+var y = [];
+
+iniciar();
+
+// Funções
+
+function direction(){
+vetor=[]
+vetor.push(Math.round(Math.random() * 3))
+if(vetor[0] == 0){
+    paraEsquerda = true
+	paraDireita = false
+	paraCima = false
+	paraBaixo = false
+	}
+	else if(vetor[0] == 1){
+	paraEsquerda = false
+	paraDireita = true
+	paraCima = false
+	paraBaixo = false
+	}
+	else if(vetor[0] == 2){
+	paraEsquerda = false
+	paraDireita = false
+	paraCima = true
+	paraBaixo = false
+	}
+	else if(vetor[0] == 3){
+	paraEsquerda = false
+	paraDireita = false
+	paraCima = false
+	paraBaixo = true
+	}
+}	
+
+function timer(){			
+		if((min > 0) || (seg > 0)){				
+			if(seg == 0){					
+				seg = 59;					
+				min = min - 1	
+			}				
+			else{					
+			
+				seg = seg - 1;				
+			}				
+			if(min.toString().length == 1){					
+				min = "0" + min;				
+			}				
+			if(seg.toString().length == 1){					
+				seg = "0" + seg;				
+			}				
+			document.getElementById('spantimer').innerHTML = min + ":" + seg;				
+			setTimeout('timer()', 1000);			
+		}			
+		else if(comidapaGanhar != 14){				
+			document.getElementById('spantimer').innerHTML = "00:00";	
+			fimDeJogo();
+            noJogo = false;
+            c.fillStyle = "red"
+            c.fillRect(0, 0, C_LARGURA, C.C_ALTURA)
+		}		
+	}	
+
+function iniciar() {
+    tela = document.getElementById("tela");
+    c = tela.getContext("2d");
+
+	c.fillStyle = "black";
+	c.fillRect(0, 0, C_LARGURA, C_ALTURA);
+sound.play()
+    carregarImagens();
+    criarCobra();
+    localizarMaca();
+	localizarObstaculo();
+    setTimeout("cicloDeJogo()", ATRASO);
+	direction()
+}    
+
+function carregarImagens() {
+    cabeca = new Image();
+    cabeca.src = "cabeca.png";    
+    
+    bola = new Image();
+    bola.src = "ponto.png"; 
+    
+    maca = new Image();
+    maca.src = "maca.png"; 
+	
+	obstaculo = new Image();
+	obstaculo.src = "obstaculo.png";
+}
+
+function criarCobra() {
+    pontos = 6;
+	
+    for (var z = 0; z < pontos; z++) {
+        x[z] = 50 - z * 10;
+        y[z] = 50;
+    }
+}
+
+function localizarMaca() {
+    var i = 0;
+    while(i <= 14){
+	
+    var r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    maca_x[i] = r * TAMANHO_PONTO;
+
+    r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    maca_y[i] = r * TAMANHO_PONTO;
+	i = i + 1;
+	}
+}
+
+function localizarObstaculo() {
+    var i = 0;
+    while(i <= 9){
+	
+    var r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    obstaculo_x[i] = r * TAMANHO_PONTO;
+
+    r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    obstaculo_y[i] = r * TAMANHO_PONTO;
+	i = i + 1;
+	}
+}
+
+function gg() {
+    if (comidapaGanhar == 14) {
+        noJogo = false;
+            c.fillStyle = "green"
+            c.fillRect(0, 0, C_LARGURA,C_ALTURA)
+            tuganhol()
+
+    }
+}    
+
+function cicloDeJogo() {
+    if (noJogo) {
+        verificarMaca();
+        verificarObstaculo();
+        verificarColisao();
+        mover();
+        sound.play()
+        fazerDesenho();
+        gg()
+        setTimeout("cicloDeJogo()", ATRASO);
+        
+    }
+}
+
+
+function verificarMaca() {
+    for(var i = 0; i <= 14; i++){
+    if ((x[0] == maca_x[i]) && (y[0] == maca_y[i])) {
+        comidaMaca++;
+        comidapaGanhar++;
+		maca_x[i] = null;
+        maca_y[i] = null;
+        sound2.play()
+        sound2.play()
+        if(comidaMaca == 3) {
+            pontos++
+            comidaMaca = 0;
+        }
+    }
+}    
+}
+function verificarObstaculo() {
+    for(var n=0; n < 10; n++){
+    if ((x[0] == obstaculo_x[n]) && (y[0] == obstaculo_y[n])) {
+       pontos--;
+        obstaculo_x[n] = null;
+        obstaculo_y[n] = null;
+        sound3.pause()
+        sound3.play()
+        if(pontos ==1) {
+            noJogo = false;
+            c.fillStyle = "green"
+            c.fillRect(0, 0, C_LARGURA,C_ALTURA)
+        }
+    }
+    
+}   
+} 
+
+
+function verificarColisao() {
+    for (var z = pontos; z > 0; z--) {
+        if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+            noJogo = true;
+        }
+    }
+
+    if (y[0] >= C_ALTURA) {
+        y[0] = 0;
+    }
+
+    if (y[0] < 0) {
+        y[0] = C_ALTURA;
+    }
+
+    if (x[0] >= C_LARGURA) {
+        x[0] = 0;
+    }
+
+    if (x[0] < 0) {
+        x[0] = C_LARGURA;
+	}
+}
+
+function mover() {
+    for (var z = pontos; z > 0; z--) {
+        x[z] = x[z-1];
+        y[z] = y[z-1];
+    }
+
+    if (paraEsquerda) {
+        x[0] -= TAMANHO_PONTO;
+    }
+
+    if (paraDireita) {
+        x[0] += TAMANHO_PONTO;
+    }
+
+    if (paraCima) {
+        y[0] -= TAMANHO_PONTO;
+    }
+
+    if (paraBaixo) {
+        y[0] += TAMANHO_PONTO;
+    }
+}    
+
+function fazerDesenho() {
+    c.clearRect(0, 0, C_LARGURA, C_ALTURA);
+	c.fillRect(0, 0, C_LARGURA, C_ALTURA);
+	
+    if (noJogo) {
+        for(var i = 0; i<=14; i++){	
+          c.drawImage(maca, maca_x[i], maca_y[i]);
+		}  
+		  
+		for( var i = 0; i<=9; i++){	
+          c.drawImage(obstaculo, obstaculo_x[i], obstaculo_y[i]); 
+		}
+		
+        for (var z = 0; z < pontos; z++) {
+            if (z == 0) {
+                c.drawImage(cabeca, x[z], y[z]);
+            } else {
+                c.drawImage(bola, x[z], y[z]);
+            }
+        }    
+    } else {
+        fimDeJogo();
+    }        
+}
+
+function fimDeJogo() {
+    c.fillStyle = "white";
+    c.textBaseline = "middle"; 
+    c.textAlign = "center"; 
+    c.font = "normal bold 60px papyrus";
+    c.fillText("YOU DIED", C_LARGURA/2, C_ALTURA/2);
+}
+function tuganhol() {
+    c.fillStyle = "white";
+    c.textBaseline = "middle"; 
+    c.textAlign = "center"; 
+    c.font = "normal bold 60px papyrus";
+    c.fillText("Win GG easy ", C_LARGURA/2, C_ALTURA/2);
+}
+
+onkeydown = function(e) {
+    var tecla = e.keyCode;
+
+    if ((tecla == TECLA_ESQUERDA) && (!paraDireita)) {
+        paraEsquerda = true;
+        paraCima = false;
+        paraBaixo = false;
+    }
+
+    if ((tecla == TECLA_DIREITA) && (!paraEsquerda)) {
+        paraDireita = true;
+        paraCima = false;
+        paraBaixo = false;
+    }
+
+    if ((tecla == TECLA_ACIMA) && (!paraBaixo)) {
+        paraCima = true;
+        paraDireita = false;
+        paraEsquerda = false;
+    }
+
+    if ((tecla == TECLA_ABAIXO) && (!paraCima)) {
+        paraBaixo = true;
+        paraDireita = false;
+        paraEsquerda = false;
+    }        
+}; 
+}
+
+
+if(a == 3) {
+
+var minutos; 		
+var seg;
+minutos = 1, seg = 0;	
+
+
+var tela;
+var c;
+var sound = document.getElementById("sound")
+var sound2 = document.getElementById("sound2")
+var sound3 = document.getElementById("sound3")
+
+
+var cabeca;
+var maca = []
+var bola;
+var obstaculo;
+var trincheira;
+var cor;
+
+var pontos;
+var comidaMaca = 0;
+var comidapaGanhar = 0;
+var maca_x = [];
+var maca_y = [];
+var obstaculo_x = [];
+var obstaculo_y = [];
+var trincheira_1x = [];
+var trincheira_2x = [];
+var trincheira_1y = [];
+var trincheira_2y = [];
+
+var noJogo = true;    
+
+const TAMANHO_PONTO = 10;
+const ALEATORIO_MAXIMO = 60;
+var ATRASO = 50;
+const C_ALTURA = 600;
+const C_LARGURA = 600;    
+
+const TECLA_ESQUERDA = 37;
+const TECLA_DIREITA = 39;
+const TECLA_ACIMA = 38;
+const TECLA_ABAIXO = 40;
+
+var x = [];
+var y = [];
+
+iniciar();
+
+
+
+
+
+function direction(){
+vetor=[]
+vetor.push(Math.round(Math.random() * 3))
+if(vetor[0] == 0){
+    paraEsquerda = true
+	paraDireita = false
+	paraCima = false
+	paraBaixo = false
+	}
+	else if(vetor[0] == 1){
+	paraEsquerda = false
+	paraDireita = true
+	paraCima = false
+	paraBaixo = false
+	}
+	else if(vetor[0] == 2){
+	paraEsquerda = false
+	paraDireita = false
+	paraCima = true
+	paraBaixo = false
+	}
+	else if(vetor[0] == 3){
+	paraEsquerda = false
+	paraDireita = false
+	paraCima = false
+	paraBaixo = true
+	}
+}	
+
+function timer(){			
+		if((minutos > 0) || (seg > 0)){				
+			if(seg == 0){					
+				seg = 59;					
+				minutos = minutos - 1	
+			}				
+			else{					
+			
+				seg = seg - 1;				
+			}				
+			if(minutos.toString().length == 1){					
+				minutos = "0" + minutos;				
+			}				
+			if(seg.toString().length == 1){					
+				seg = "0" + seg;				
+			}				
+			document.getElementById('spantimer').innerHTML = minutos + ":" + seg;				
+            setTimeout('timer()', 1000);
+    			
+		}			
+		else if(comidapaGanhar != 14){				
+			document.getElementById('spantimer').innerHTML = "00:00";	
+			fimDeJogo();
+            noJogo = false;
+            c.fillStyle = "red"
+            c.fillRect(0, 0, C_LARGURA, C.C_ALTURA)
+		}		
+	}	
+
+function iniciar() {
+    tela = document.getElementById("tela");
+    c = tela.getContext("2d");
+	c.fillStyle = "black";
+	c.fillRect(0, 0, C_LARGURA, C_ALTURA);
+    sound.play();
+    carregarImagens();
+    criarCobra();
+    localizarMaca();
+    localizarObstaculo();
+    localizarTrincheira();
+    localizarTrincheira2();
+    setTimeout("cicloDeJogo()", ATRASO);
+	direction();
+}    
+
+function carregarImagens() {
+    cabeca = new Image();
+    cabeca.src = "cabeca.png";    
+    
+    bola = new Image();
+    bola.src = "ponto.png"; 
+    
+   for(var i = 0; i < 15; i++) {
+     if(i == 0 || i==1 || i==2 )  {
+         maca[i] = new Image();
+         maca[i].src = "vermelho.png"
+     }
+     if(i == 3 || i == 4 || i== 5){
+     maca[i] = new Image();
+         maca[i].src = "amarelo.png"
+     }
+     if(i==6 || i== 7|| i == 8){
+        maca[i] = new Image();
+         maca[i].src = "verde.png"
+
+     }
+     if(i == 9 || i == 10 || i == 11){
+        maca[i] = new Image();
+         maca[i].src = "azul.png"
+
+     }
+     if(i == 12 || i == 13 || i ==14){
+        maca[i] = new Image();
+         maca[i].src = "branco.png"
+
+     }
+   }
+	
+	obstaculo = new Image();
+    obstaculo.src = "obstaculo.png";
+    
+    trincheira = new Image();
+    trincheira.src = "trincheira.png"
+}
+
+function criarCobra() {
+    pontos = 6;
+	
+    for (var z = 0; z < pontos; z++) {
+        x[z] = 50 - z * 10;
+        y[z] = 50;
+    }
+}
+
+function localizarMaca() {
+    var i = 0;
+    while(i <= 14){
+	
+    var r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    maca_x[i] = r * TAMANHO_PONTO;
+
+    r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    maca_y[i] = r * TAMANHO_PONTO;
+	i = i + 1;
+	}
+}
+
+function localizarTrincheira() {
+    var i = 0;
+    var z = 120
+    while(i < 200){
+        trincheira_1x[i] = 120
+        trincheira_1y[i] = z
+        z++
+        i++
+        
+	}
+}
+function localizarTrincheira2(){
+    var i = 0;
+    var z = 120
+    while(i < 200){
+        trincheira_2x[i] = 340
+        trincheira_2y[i] = z
+        z++
+        i++
+        
+    }
+}
+
+
+
+
+
+function localizarObstaculo() {
+    var i = 0;
+    while(i <= 9){
+	
+    var r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    obstaculo_x[i] = r * TAMANHO_PONTO;
+
+    r = Math.floor(Math.random() * ALEATORIO_MAXIMO);
+    obstaculo_y[i] = r * TAMANHO_PONTO;
+	i = i + 1;
+	}
+}
+
+function gg() {
+    if (comidapaGanhar == 14) {
+        noJogo = false;
+            c.fillStyle = "green"
+            c.fillRect(0, 0, C_LARGURA,C_ALTURA)
+            tuganhol()
+
+    }
+}    
+
+function cicloDeJogo() {
+    if (noJogo) {
+        verificarMaca();
+        verificarObstaculo();
+        verificarTrincheira()
+        verificarTrincheira2()
+        verificarColisao();
+        mover();
+        fazerDesenho();
+        sound.play()
+        gg()
+        setTimeout("cicloDeJogo()", ATRASO);
+       
+    }
+}
+
+function verificarTrincheira() {
+    for(var i = 0; i < 200; i++){
+    if ((x[0] == trincheira_1x[i]) && (y[0] == trincheira_1y[i])) {
+        noJogo = false
+        c.fillStyle = "black"
+        c.fillRect(0, 0, C_LARGURA, C_ALTURA)
+        sound3.pause()
+        sound3.play()
+}    
+}
+}
+function verificarTrincheira2() {
+    for(var i = 0; i < 200; i++){
+    if ((x[0] == trincheira_2x[i]) && (y[0] == trincheira_2y[i])) {
+        noJogo = false
+        c.fillStyle = "black"
+        c.fillRect(0, 0, C_LARGURA, C_ALTURA)
+        sound3.pause()
+        sound3.play()
+}    
+}
+}
+function verificarMaca() {
+    for(var i = 0; i <= 14; i++){
+    if ((x[0] == maca_x[i]) && (y[0] == maca_y[i])) {
+        comidaMaca++;
+        comidapaGanhar++;
+		maca_x[i] = null;
+        maca_y[i] = null;
+        sound2.pause()
+        sound2.play()
+        ATRASO = ATRASO - 3
+        if(comidaMaca == 3) {
+            pontos++
+            
+            comidaMaca = 0;
+           
+        }
+    }
+}    
+}
+function verificarObstaculo() {
+    for(var n=0; n < 10; n++){
+    if ((x[0] == obstaculo_x[n]) && (y[0] == obstaculo_y[n])) {
+       pontos--;
+        obstaculo_x[n] = null;
+        obstaculo_y[n] = null;
+        sound3.pause()
+        sound3.play()
+        if(pontos ==1) {
+            
+            noJogo = false;
+            c.fillStyle = "green"
+            c.fillRect(0, 0, C_LARGURA,C_ALTURA)
+        }
+    }
+    
+}   
+} 
+
+
+function verificarColisao() {
+    for (var z = pontos; z > 0; z--) {
+        if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+            noJogo = true;
+            
+        }
+    }
+
+    if (y[0] >= C_ALTURA) {
+        y[0] = 0;
+    }
+
+    if (y[0] < 0) {
+        y[0] = C_ALTURA;
+    }
+
+    if (x[0] >= C_LARGURA) {
+        x[0] = 0;
+    }
+
+    if (x[0] < 0) {
+        x[0] = C_LARGURA;
+	}
+}
+
+function mover() {
+    for (var z = pontos; z > 0; z--) {
+        x[z] = x[z-1];
+        y[z] = y[z-1];
+    }
+
+    if (paraEsquerda) {
+        x[0] -= TAMANHO_PONTO;
+    }
+
+    if (paraDireita) {
+        x[0] += TAMANHO_PONTO;
+    }
+
+    if (paraCima) {
+        y[0] -= TAMANHO_PONTO;
+    }
+
+    if (paraBaixo) {
+        y[0] += TAMANHO_PONTO;
+    }
+}    
+
+function fazerDesenho() {
+    c.clearRect(0, 0, C_LARGURA, C_ALTURA);
+	c.fillRect(0, 0, C_LARGURA, C_ALTURA);
+	
+    if (noJogo) {
+        for(var i = 0; i < 15; i++){	
+          c.drawImage(maca[i], maca_x[i], maca_y[i]);
+		}  
+		  
+		for( var i = 0; i<=9; i++){	
+          c.drawImage(obstaculo, obstaculo_x[i], obstaculo_y[i]); 
+		}
+        for(var i = 0; i<200
+; i++){	
+          c.drawImage(trincheira, trincheira_1x[i], trincheira_1y[i]);
+        }  
+        for(var i = 0; i<200
+; i++){	
+          c.drawImage(trincheira, trincheira_2x[i], trincheira_2y[i]);
+		}  
+        for (var z = 0; z < pontos; z++) {
+            if (z == 0) {
+                c.drawImage(cabeca, x[z], y[z]);
+            } else {
+                if(comidaMaca >= 0){
+                    for(var i = 0; i < 15; i++){
+                        if((x[0] == maca_x[i]) && (y[0] == maca_y[i])) {
+                            cor = i
+                        }
+                    }
+                        if(cor == 0 || cor == 1 || cor == 2){
+                                c.drawImage(maca[cor],x[z],y[z])
+                        }
+                        if(cor == 3 || cor == 4 || cor == 5){
+                                c.drawImage(maca[cor],x[z],y[z])
+                        }
+                        if(cor == 6 || cor == 7 || cor == 8){
+                                c.drawImage(maca[cor],x[z],y[z])
+                        }
+                        if(cor == 9 || cor == 10 || cor == 11){
+                                c.drawImage(maca[cor],x[z],y[z])
+                        }
+                        if(cor == 12 || cor == 13 || cor == 14){
+                                c.drawImage(maca[cor],x[z],y[z])
+                        }
+
+
+
+                    
+
+                } else {
+                c.drawImage(bola, x[z], y[z]);
+            } }
+        }    
+    } else {
+        fimDeJogo();
+    }        
+}
+
+function fimDeJogo() {
+    c.fillStyle = "white";
+    c.textBaseline = "middle"; 
+    c.textAlign = "center"; 
+    c.font = "normal bold 60px papyrus";
+    c.fillText("DeAd END", C_LARGURA/2, C_ALTURA/2);
+}
+function tuganhol() {
+    c.fillStyle = "white";
+    c.textBaseline = "middle"; 
+    c.textAlign = "center"; 
+    c.font = "normal bold 60px papyrus";
+    c.fillText("Win GG nigga", C_LARGURA/2, C_ALTURA/2);
+}
+
+onkeydown = function(e) {
+    var tecla = e.keyCode;
+
+    if ((tecla == TECLA_ESQUERDA) && (!paraDireita)) {
+        paraEsquerda = true;
+        paraCima = false;
+        paraBaixo = false;
+    }
+
+    if ((tecla == TECLA_DIREITA) && (!paraEsquerda)) {
+        paraDireita = true;
+        paraCima = false;
+        paraBaixo = false;
+    }
+
+    if ((tecla == TECLA_ACIMA) && (!paraBaixo)) {
+        paraCima = true;
+        paraDireita = false;
+        paraEsquerda = false;
+    }
+
+    if ((tecla == TECLA_ABAIXO) && (!paraCima)) {
+        paraBaixo = true;
+        paraDireita = false;
+        paraEsquerda = false;
+    }        
+};   
+} 
+</script></head><body style="font-family:verdana;font-size:10px;" onLoad="timer()">	<span id="spantimer"></span></body></html>
